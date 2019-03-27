@@ -17,13 +17,13 @@ namespace AzureSearchExample
         [Fact]
         public async Task Can_find_person_by_exact_and_unique_email()
         {
-            await fixture.SearchService.RecreateIndex();
+            await fixture.SearchService.RecreateIndexAsync();
             var dto = new PersonDto { Email = $"{Guid.NewGuid()}@example.org" };
             await fixture.SearchService.IndexAsync(dto);
 
             WaitForIndexing(dto);
 
-            var searchResult = await fixture.SearchService.Search(dto.Email);
+            var searchResult = await fixture.SearchService.SearchAsync(dto.Email);
 
             Assert.Single(searchResult.Results, p => p.Document.Id == dto.Id);
         }
@@ -31,13 +31,13 @@ namespace AzureSearchExample
         [Fact]
         public async Task Can_find_person_by_exact_and_unique_lastname()
         {
-            await fixture.SearchService.RecreateIndex();
+            await fixture.SearchService.RecreateIndexAsync();
             var dto = new PersonDto { LastName = $"{Guid.NewGuid()}@example.org" };
             await fixture.SearchService.IndexAsync(dto);
 
             WaitForIndexing(dto);
 
-            var searchResult = await fixture.SearchService.Search(dto.Email);
+            var searchResult = await fixture.SearchService.SearchAsync(dto.Email);
 
             Assert.Single(searchResult.Results, p => p.Document.Id == dto.Id);
         }
@@ -51,7 +51,7 @@ namespace AzureSearchExample
         [InlineData(10)]
         public async Task Can_index_and_then_find_person_many_times_in_a_row(int count)
         {
-            await fixture.SearchService.RecreateIndex();
+            await fixture.SearchService.RecreateIndexAsync();
 
             for (int i = 0; i < count; i++)
             {
@@ -61,7 +61,7 @@ namespace AzureSearchExample
 
                 WaitForIndexing(dto);
 
-                var searchResult = await fixture.SearchService.Search(dto.Id);
+                var searchResult = await fixture.SearchService.SearchAsync(dto.Id);
 
                 Assert.Single(searchResult.Results, p => p.Document.Id == dto.Id);
             }

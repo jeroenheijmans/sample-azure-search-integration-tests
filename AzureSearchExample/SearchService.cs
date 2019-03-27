@@ -44,7 +44,7 @@ namespace AzureSearchExample
             _searchAdminClient.Indexes.Delete(_configuration.IndexName);
         }
 
-        public async Task RecreateIndex()
+        public async Task RecreateIndexAsync()
         {
             await DeleteIndexAsync();
 
@@ -65,7 +65,7 @@ namespace AzureSearchExample
             return _searchIndexClient.Documents.Count();
         }
 
-        public async Task<DocumentSearchResult<PersonDto>> Search(string query)
+        public async Task<DocumentSearchResult<PersonDto>> SearchAsync(string query)
         {
             var parameters = new SearchParameters
             {
