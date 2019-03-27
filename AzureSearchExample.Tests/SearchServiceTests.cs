@@ -21,7 +21,7 @@ namespace AzureSearchExample
             var dto = new PersonDto { Email = $"{Guid.NewGuid()}@example.org" };
             await fixture.SearchService.IndexAsync(dto);
 
-            WaitForIndexing();
+            WaitForIndexing(dto);
 
             var searchResult = await fixture.SearchService.Search(dto.Email);
 
@@ -35,7 +35,7 @@ namespace AzureSearchExample
             var dto = new PersonDto { LastName = $"{Guid.NewGuid()}@example.org" };
             await fixture.SearchService.IndexAsync(dto);
 
-            WaitForIndexing();
+            WaitForIndexing(dto);
 
             var searchResult = await fixture.SearchService.Search(dto.Email);
 
@@ -59,7 +59,7 @@ namespace AzureSearchExample
                 var dto = new PersonDto { Email = $"{guid}@example.org" };
                 await fixture.SearchService.IndexAsync(dto);
 
-                WaitForIndexing();
+                WaitForIndexing(dto);
 
                 var searchResult = await fixture.SearchService.Search(dto.Id);
 
@@ -67,13 +67,31 @@ namespace AzureSearchExample
             }
         }
 
-        private void WaitForIndexing()
+        private void WaitForIndexing(PersonDto dto)
         {
-            // There seems to be no good way to determine if a document was both
-            // indexed *and* ready to be found through searching. So instead we
-            // resort to this:
-            
-            Thread.Sleep(2000);
+            // If you use a *free* tier OR a tier with multiple replicas, it is not
+            // reliable to spin until you can query the document, as you might get
+            // a result from a replica here, when the real assertions and tests run
+            // against a replica that is lagging behind.
+            //
+            // See also: https://stackoverflow.com/a/40117836/419956
+            //
+            // So instead, you should resort to something like this:
+            //
+            // Thread.Sleep(2000);
+
+            var wait = 25;
+
+            while (wait <= 2000)
+            {
+                Thread.Sleep(wait);
+                var result = fixture.SearchService.FilterForId(dto.Id);
+                if (result.Result.Results.Count == 1) return;
+                if (result.Result.Results.Count > 1) throw new Exception("Unexpected results");
+                wait *= 2;
+            }
+
+            throw new Exception("Found nothing after waiting a while");
         }
     }
 }
