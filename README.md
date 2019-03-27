@@ -2,6 +2,8 @@
 
 Repository to show how you could set up integration tests for Azure Search using xUnit and .NET Core.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/xpp2by1wmlvhoonr/branch/master?svg=true)](https://ci.appveyor.com/project/JeroenHeijmans/sample-azure-search-integration-tests/branch/master)
+
 ## Getting started
 
 > ⚠ If you use a _free_ tier search service, or a _basic tier with > 1 replica_, you need to adjust `WaitForIndexing` (see comments in method).
