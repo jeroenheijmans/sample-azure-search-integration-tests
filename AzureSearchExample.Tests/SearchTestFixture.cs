@@ -5,8 +5,8 @@ namespace AzureSearchExample
 {
     public class SearchTestFixture : IDisposable
     {
-        private static readonly string searchServiceName;
-        private static readonly string apiKey;
+        public static readonly string searchServiceName;
+        public static readonly string apiKey;
 
         static SearchTestFixture()
         {
