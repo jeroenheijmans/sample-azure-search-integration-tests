@@ -5,9 +5,8 @@ namespace AzureSearchExample
 {
     public class SearchTestFixture : IDisposable
     {
-        private static readonly string searchServiceName = "sample-azure-search";
-
-        // File is in the .gitignore file
+        // Files are in the .gitignore file
+        private static readonly string searchServiceName = File.ReadAllText("SearchServiceName.txt").Trim();
         private static readonly string apiKey = File.ReadAllText("ApiKey.txt").Trim();
 
         public SearchService SearchService { get; }
