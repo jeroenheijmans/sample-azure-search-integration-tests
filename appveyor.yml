@@ -4,6 +4,12 @@ skip_branch_with_pr: false
 
 # See: https://www.appveyor.com/docs/build-configuration/
 
+environment:
+  apiKey:
+    secure: oPJEO8TcPeTCXgJM4u638l6u+wh5n/sYOs9F+y2QBG8=
+  searchServiceName:
+    secure: B1Wck3IizP52LeUg+yNk6UpCE8IQD38Tqw+5Vu6i1ZI=
+
 # 1. INIT
 init:
   - cmd: git config --global core.autocrlf true
