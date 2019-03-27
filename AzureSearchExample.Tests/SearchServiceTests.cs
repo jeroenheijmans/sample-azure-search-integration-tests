@@ -2,16 +2,19 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace AzureSearchExample
 {
     public class SearchServiceTests : IClassFixture<SearchTestFixture>
     {
         private readonly SearchTestFixture fixture;
+        private readonly ITestOutputHelper output;
 
-        public SearchServiceTests(SearchTestFixture fixture)
+        public SearchServiceTests(SearchTestFixture fixture, ITestOutputHelper output)
         {
             this.fixture = fixture;
+            this.output = output;
         }
 
         [Fact]
@@ -89,6 +92,7 @@ namespace AzureSearchExample
                 if (result.Result.Results.Count == 1) return;
                 if (result.Result.Results.Count > 1) throw new Exception("Unexpected results");
                 wait *= 2;
+                output.WriteLine($"Spinning {wait}ms waiting for document to be searchable");
             }
 
             throw new Exception("Found nothing after waiting a while");
