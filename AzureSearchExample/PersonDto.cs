@@ -10,6 +10,7 @@ namespace AzureSearchExample
     {
         [Key]
         [IsFilterable]
+        [IsSearchable]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [IsSortable]
