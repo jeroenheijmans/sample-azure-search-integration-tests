@@ -10,5 +10,4 @@
 **/.vs/
 tempkey.rsa
 
-ApiKey.txt
-SearchServiceName.txt
+appsettings.dev.json

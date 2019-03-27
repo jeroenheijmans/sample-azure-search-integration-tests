@@ -1,13 +1,27 @@
-﻿using System;
-using System.IO;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 
 namespace AzureSearchExample
 {
     public class SearchTestFixture : IDisposable
     {
-        // Files are in the .gitignore file
-        private static readonly string searchServiceName = File.ReadAllText("SearchServiceName.txt").Trim();
-        private static readonly string apiKey = File.ReadAllText("ApiKey.txt").Trim();
+        private static readonly string searchServiceName;
+        private static readonly string apiKey;
+
+        static SearchTestFixture()
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.dev.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            searchServiceName = configuration["searchServiceName"];
+            apiKey = configuration["apiKey"];
+
+            if (string.IsNullOrWhiteSpace(apiKey)) throw new Exception("Found no apiKey in appsettings or environment variables");
+            if (string.IsNullOrWhiteSpace(searchServiceName)) throw new Exception("Found no searchServiceName in appsettings or environment variables");
+        }
 
         public SearchService SearchService { get; }
 
