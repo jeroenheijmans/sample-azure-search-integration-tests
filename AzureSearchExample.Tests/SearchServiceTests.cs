@@ -18,6 +18,11 @@ namespace AzureSearchExample
         }
 
         [Fact]
+        public async Task SearchServiceName_Is_Dummy() {
+            Assert.Equal("dummy", SearchTestFixture.searchServiceName);
+        }
+
+        [Fact]
         public async Task Can_find_person_by_exact_and_unique_email()
         {
             await fixture.SearchService.RecreateIndexAsync();
