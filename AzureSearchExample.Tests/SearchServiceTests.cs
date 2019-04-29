@@ -72,30 +72,50 @@ namespace AzureSearchExample
 
         private void WaitForIndexing(PersonDto dto)
         {
-            // If you use a *free* tier OR a tier with multiple replicas, it is not
-            // reliable to spin until you can query the document, as you might get
-            // a result from a replica here, when the real assertions and tests run
-            // against a replica that is lagging behind.
+            // 1. If you use a *free* tier OR a tier with multiple replicas, it is
+            // not reliable to spin until you can query the document, as you might
+            // get a result from a replica here, when the real assertions and tests
+            // run against a replica that is lagging behind.
             //
             // See also: https://stackoverflow.com/a/40117836/419956
             //
             // So instead, you should resort to something like this:
             //
-            // Thread.Sleep(2000);
+            WaitForIndexingOnMultipleReplicaTier(dto);
 
+            // 2. But, if you're on a paid tier and have explicitly set *one* replica,
+            // you can use something a bit more speedy:
+            // WaitForIndexingOnSingleReplicaTier(dto);
+        }
+
+        private void WaitForIndexingOnMultipleReplicaTier(PersonDto dto)
+        {
+            Thread.Sleep(2000);
+            if (CanFindDocument(dto)) return;
+            throw new Exception("Found nothing after waiting a while");
+        }
+
+        private void WaitForIndexingOnSingleReplicaTier(PersonDto dto)
+        {
             var wait = 25;
 
             while (wait <= 2000)
             {
                 Thread.Sleep(wait);
-                var result = fixture.SearchService.FilterForId(dto.Id);
-                if (result.Result.Results.Count == 1) return;
-                if (result.Result.Results.Count > 1) throw new Exception("Unexpected results");
+                if (CanFindDocument(dto)) return;
                 wait *= 2;
                 output.WriteLine($"Spinning {wait}ms waiting for document to be searchable");
             }
 
             throw new Exception("Found nothing after waiting a while");
+        }
+
+        private bool CanFindDocument(PersonDto dto)
+        {
+            var result = fixture.SearchService.FilterForId(dto.Id);
+            if (result.Result.Results.Count == 1) return true;
+            if (result.Result.Results.Count > 1) throw new Exception("Unexpected results");
+            return false;
         }
     }
 }
