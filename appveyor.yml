@@ -6,9 +6,9 @@ skip_branch_with_pr: false
 
 environment:
   apiKey:
-    secure: aI3+K85ypNEkRBOCrbZDUdkmGLUQ0y3WFlmd5RXauJckUuMWOLw88O6cbpiFxAox
+    secure: bbnjILIptRGQ+2Au4NiKyELavQvogvj1yY5HpC+ze9214ER2JBsFAzOlVUSfAyhO
   searchServiceName:
-    secure: w8W0eIe+LqvDqYvW2ewTwenHdEZa3+6ULnRr5CdpPBU=
+    secure: w8W0eIe+LqvDqYvW2ewTwQhGw8QCgLjGtctF3OA33xE=
 
 # 1. INIT
 init:
